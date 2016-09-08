@@ -2,20 +2,8 @@
 
 ## Overview
 
-The point of this is for my personal learning, then to show my abilities to
-potential job prospect stewards, then to help others learn the same things.
-
-My take on these matters is that I presume the world will help an old guy like
-me surivive, somehow, anyway, so that I want to demonstrate to myself and
-others the extent of my vital abilities so that optimal judgement may be made
-by selecting players in projects of picking me for their activities, or not.
-Ultimately, when I have made comfortable progress here, I hope to embed links
-to it in my resume, as well as possibly other reference points.
-
-I also hope to learn these things as an aid to both my general professional
-abilities, which is to say beyond coding, and as a complement to my social
-science interests, going back to my BA degree work at the University of
-Washington, and things I've done around or related to those early interests.
+This will feature coding examples I have for job prospects, fellow professionals,
+and others who may find them helpful in their learning or amusement.
 
 ## Coding Languages
 
