@@ -1,0 +1,43 @@
+# Custom Makefile for Preprocessor Generic Sort Algorithm Exercises.
+
+DEBUG = -g
+#DEBUG =
+
+HEADERS = /usr/local/include ../env.h itemtype.h xcppsorts.h
+
+ITEMTYPESPEC = int
+
+SORTTYPES = heap
+
+$(ITEMTYPESPEC)itemtype.o:  itemtype.c $(HEADERS)
+	gcc $(DEBUG) -c itemtype.c -o $(ITEMTYPESPEC)itemtype.o
+	
+$(ITEMTYPESPEC)itemtypeTests.o:  itemtypeTests.c $(HEADERS)
+	gcc $(DEBUG) -c itemtypeTests.c -o $(ITEMTYPESPEC)itemtypeTests.o
+	
+$(ITEMTYPESPEC)itemtypeTests: $(ITEMTYPESPEC)itemtype.o $(ITEMTYPESPEC)itemtypeTests.o
+	gcc $(DEBUG) $(ITEMTYPESPEC)itemtype.o $(ITEMTYPESPEC)itemtypeTests.o -o $(ITEMTYPESPEC)itemtypeTests -lcriterion
+	
+$(patsubst $(ITEMTYPESPEC)%sort.o,replacement,text)
+$(ITEMTYPESPEC)%sort.o: heapsort.c $(HEADERS)
+	gcc $(DEBUG) -c heapsort.c -o $(ITEMTYPESPEC)heapsort.o
+
+$(ITEMTYPESPEC)heapsortTests.o: heapsortTests.c $(HEADERS)
+	gcc $(DEBUG) -c heapsortTests.c -o $(ITEMTYPESPEC)heapsortTests.o
+	
+$(ITEMTYPESPEC)heapsortTests: $(ITEMTYPESPEC)heapsort.o $(ITEMTYPESPEC)heapsortTests.o $(ITEMTYPESPEC)itemtype.o
+	gcc $(DEBUG) $(ITEMTYPESPEC)heapsort.o $(ITEMTYPESPEC)heapsortTests.o $(ITEMTYPESPEC)itemtype.o -o $(ITEMTYPESPEC)heapsortTests -lcriterion
+	
+sort$(ITEMTYPESPEC)s.o: sort$(ITEMTYPESPEC)s.c $(HEADERS)
+	gcc $(DEBUG) -c sort$(ITEMTYPESPEC)s.c -o sort$(ITEMTYPESPEC)s.o
+
+sort$(ITEMTYPESPEC)s: sort$(ITEMTYPESPEC)s.o $(ITEMTYPESPEC)heapsort.o $(ITEMTYPESPEC)itemtype.o
+	gcc $(DEBUG) $(ITEMTYPESPEC)heapsort.o $(ITEMTYPESPEC)itemtype.o sort$(ITEMTYPESPEC)s.o -o sortints
+	
+
+clean:
+	-rm -f mess*.lst
+	-rm -f *.o
+	-rm -f sortints intheapsortTests intitemtypeTests
+	-rm -f sortpeople
+	-rm -f outdata/*

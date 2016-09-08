@@ -1,0 +1,157 @@
+/* itemtypeTests.c */
+
+/*
+#include "../env.h"
+ */
+#include "itemtype.h"
+#include <stdio.h>
+#include <criterion/criterion.h>
+
+#ifdef __PersonStructItemType 
+
+#else
+
+#define TestItemTypeArgsEqual			1
+#define TestItemTypeFirstArgGreaterX	3
+#define TestItemTypeFirstArgGreaterY	2
+
+#define SingleRecordAsString	"1234"
+#define SingleParsedValue		1234
+
+#define SecondRecordAsString	"5689"
+#define SecondParsedValue		5689
+
+ItemType TestVector[] = {1207,5,42,6875309,1428,99360,360,206,1,2,609,1941,0,11,8,123456890};
+
+/*
+#define TestData0FSpec RelSpecTestData"/inttestdata0.lst"
+*/
+
+#endif
+
+int TestCount = sizeof(TestVector) / sizeof(ItemType);
+
+Test(itemtype_GetComparisonFunction,get_and_compare_cmp) {
+	extern int Cmp0ItemType(const void *, const void *);
+	extern int Cmp1ItemType(const void *, const void *);
+	ComparisonFnPtr cmp = NULL;
+
+	cmp = GetComparisonFunction('0');
+    cr_assert(cmp == Cmp0ItemType);
+
+	cmp = GetComparisonFunction('1');
+    cr_assert(cmp == Cmp1ItemType);
+}
+
+Test(itemtype_GetComparisonFunction,cmp_args_equal) {
+	char c;
+	ComparisonFnPtr cmp;
+	int r;
+	ItemType x = TestItemTypeArgsEqual;
+	ItemType y = TestItemTypeArgsEqual;
+
+	for(c='0'; c<='1'; ++c) {
+		cmp = GetComparisonFunction(c);
+		r = cmp(&x,&y);
+		cr_assert(r == 0);
+	}
+}
+
+Test(itemtype_GetComparisonFunction,cmp_first_arg_greater) {
+	char c;
+	ComparisonFnPtr cmp;
+	int r;
+	ItemType x = TestItemTypeFirstArgGreaterX;
+	ItemType y = TestItemTypeFirstArgGreaterY;
+	
+	for(c='0'; c<='1'; ++c) {
+		cmp = GetComparisonFunction(c);
+		r = cmp(&x,&y);
+		cr_assert(r > 0);
+	}
+}
+
+Test(itemtype_GetComparisonFunction,cmp_first_arg_less) {
+	char c;
+	ComparisonFnPtr cmp;
+	int r;
+	ItemType x = TestItemTypeArgsEqual;
+	ItemType y = TestItemTypeFirstArgGreaterY;
+	
+	for(c='0'; c<='1'; ++c) {
+		cmp = GetComparisonFunction(c);
+		r = cmp(&x,&y);
+		cr_assert(r < 0);
+	}
+}
+
+Test(itemtype_EqualVectors,check_combinations) {
+	bool b;
+	char c;
+	ItemType tv1[] = {1,2,3,4};
+	ItemType tv2[] = {5,6,7,8};
+	ItemType tv3[] = {5,6,7,9};
+	ItemType tv4[] = {};
+
+	for(c='0'; c<='1'; ++c) {
+		b = EqualVectors(c, tv1, tv1, 4);
+		cr_assert(b);
+		b = EqualVectors(c, tv1, tv2, 4);
+		cr_assert(!b);
+		b = EqualVectors(c, tv2, tv3, 4);
+		cr_assert(!b);
+		b = EqualVectors(c, tv2, tv3, 3);
+		cr_assert(b);
+		b = EqualVectors(c, tv2, tv4, 0);
+		cr_assert(b);
+		b = EqualVectors(c, tv4, tv4, 0);
+		cr_assert(b);
+	}
+}
+
+Test(itemtype_CopyVector,cmp_result_array_pair) {
+	bool b;
+	ItemType *ltvp;
+	ItemType ltv[] = {};
+	
+	ltvp = CopyVector(TestVector,TestCount);
+	b = EqualVectors('0', TestVector, ltvp, TestCount);
+	cr_assert(b);
+	ltvp = CopyVector(ltv,0);
+	b = EqualVectors('0', ltv, ltvp, 0);
+	cr_assert(b);
+}
+
+Test(itemtype_ParseRecord,parse_single_record_from_string) {
+	ComparisonFnPtr cmp = GetComparisonFunction('0');
+	char *string = SingleRecordAsString;
+	ItemType litem0 = SingleParsedValue;
+	ItemType litem1;
+	int r;
+	
+	r = ParseRecord(string,&litem1);
+	cr_assert( cmp(&litem1,&litem0) == 0 );
+}
+
+/*
+Test(itemtype_LoadVector,loads_and_sorts) {
+	FILE *fp = fopen(TestData0FSpec,"r");
+	int n;
+	ItemType *ltv = LoadVector(fp, &n);
+}
+ */
+
+Test(itemtype_SwapItem,simple_swap) {
+	ComparisonFnPtr cmp = GetComparisonFunction('0');
+	ItemType litem0 = SingleParsedValue;
+	ItemType litem1 = SingleParsedValue;
+	ItemType litem2 = SecondParsedValue;
+	ItemType litem3 = SecondParsedValue;
+	SwapItem(&litem0,&litem2);
+	cr_assert( cmp(&litem0,&litem3) == 0 );
+	cr_assert( cmp(&litem2,&litem1) == 0 );
+}
+
+/*
+End of itemtypeTests.c
+ */

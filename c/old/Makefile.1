@@ -1,0 +1,52 @@
+# Custom Makefile for Preprocessor Generic Sort Algorithm Exercises.
+
+DEBUG = -g
+#DEBUG =
+
+HEADERS = /usr/local/include ../env.h itemtype.h xcppsorts.h
+
+SORTSOURCES = heapsort
+
+intitemtype.o:  itemtype.c $(HEADERS)
+	gcc $(DEBUG) -c itemtype.c -o intitemtype.o
+	
+intitemtypeTests.o:  itemtypeTests.c $(HEADERS)
+	gcc $(DEBUG) -c itemtypeTests.c -o intitemtypeTests.o
+	
+intitemtypeTests: intitemtype.o intitemtypeTests.o
+	gcc $(DEBUG) intitemtype.o intitemtypeTests.o -o intitemtypeTests -lcriterion
+	
+intheapsort.o: heapsort.c $(HEADERS)
+	gcc $(DEBUG) -c heapsort.c -o intheapsort.o
+
+intheapsortTests.o: heapsortTests.c $(HEADERS)
+	gcc $(DEBUG) -c heapsortTests.c -o intheapsortTests.o
+	
+intheapsortTests: intheapsort.o intheapsortTests.o intitemtype.o
+	gcc $(DEBUG) intheapsort.o intheapsortTests.o intitemtype.o -o intheapsortTests -lcriterion
+	
+sortints.o: sortints.c $(HEADERS)
+	gcc $(DEBUG) -c sortints.c -o sortints.o
+
+sortints: sortints.o intheapsort.o intitemtype.o
+	gcc $(DEBUG) intheapsort.o intitemtype.o sortints.o -o sortints
+	
+
+personitemtype.o:  itemtype.c $(HEADERS)
+	gcc $(DEBUG) -D __PersonStructItemType -c itemtype.c -o personitemtype.o
+
+personheapsort.o: heapsort.c $(HEADERS)
+	gcc $(DEBUG) -D __PersonStructItemType -c heapsort.c -o personheapsort.o
+
+sortpeople.o: sortpeople.c $(HEADERS)
+	gcc $(DEBUG) -D __PersonStructItemType -c sortpeople.c -o sortpeople.o
+
+sortpeople: sortpeople.o personheapsort.o personitemtype.o
+	gcc $(DEBUG) personheapsort personitemtype.o sortpeople.o -o sortpeople
+
+clean:
+	-rm -f mess*.lst
+	-rm -f *.o
+	-rm -f sortints intheapsortTests intitemtypeTests
+	-rm -f sortpeople
+	-rm -f outdata/*

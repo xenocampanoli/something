@@ -1,0 +1,4 @@
+DEFAULT  = mess
+
+ME:
+	echo $(DEFAULT)
